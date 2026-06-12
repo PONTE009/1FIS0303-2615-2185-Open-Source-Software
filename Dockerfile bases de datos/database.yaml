@@ -1,0 +1,83 @@
+services:
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver-local-upc
+    restart: unless-stopped
+    ports:
+      - "8978:8978"
+    volumes:
+      - cloudbeaver_data:/opt/cloudbeaver/workspace
+    networks:
+      - backend-upc
+  
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-local-upc
+    restart: unless-stopped # reinicia el contenedor automáticamente a menos que se detenga manualmente no, always, on-failure, unless-stopped
+    ports:
+      - "5437:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d   # scripts SQL que corren al iniciar
+    networks:
+      - backend-upc
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-local-upc
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - backend-upc
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongo-local-upc
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    volumes:
+      - mongo_data:/data/db
+      - ./init/mongo:/docker-entrypoint-initdb.d
+    networks:
+      - backend-upc
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-local-upc
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend-upc
+
+volumes:
+  postgres_data:
+  mysql_data:
+  mongo_data:
+  redis_data:
+  cloudbeaver_data:
+
+networks:
+  backend-upc:
+    driver: bridge # crea una red de tipo bridge para que los contenedores puedan comunicarse entre sí. overlay : comunicación entre hosts/nodos Docker Swarm
