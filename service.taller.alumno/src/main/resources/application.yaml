@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: service.taller.alumno
+
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5437/db_upc}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://admin:Sistemas123@localhost:27017/db_mongo?authSource=admin}
