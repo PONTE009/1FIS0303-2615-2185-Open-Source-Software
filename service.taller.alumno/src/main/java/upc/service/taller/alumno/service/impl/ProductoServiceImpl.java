@@ -3,8 +3,10 @@ package upc.service.taller.alumno.service.impl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import upc.service.taller.alumno.dto.ProductoDto;
 import upc.service.taller.alumno.entity.CategoriaEntity;
 import upc.service.taller.alumno.entity.ProductoEntity;
+import upc.service.taller.alumno.mapper.ProductoMapper;
 import upc.service.taller.alumno.repository.CategoriaRepository;
 import upc.service.taller.alumno.repository.ProductoRepository;
 import upc.service.taller.alumno.service.ProductoService;
@@ -17,25 +19,31 @@ public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ProductoMapper productoMapper;
 
-    public ProductoServiceImpl(ProductoRepository productoRepository, CategoriaRepository categoriaRepository) {
+    public ProductoServiceImpl(
+            ProductoRepository productoRepository,
+            CategoriaRepository categoriaRepository,
+            ProductoMapper productoMapper
+    ) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.productoMapper = productoMapper;
     }
 
     @Override
-    public List<ProductoEntity> listar() {
-        return productoRepository.findAll();
+    public List<ProductoDto> listar() {
+        return productoMapper.toDtoList(productoRepository.findAll());
     }
 
     @Override
-    public ProductoEntity obtenerPorId(Long idProducto) {
-        return productoRepository.findById(idProducto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
+    public ProductoDto obtenerPorId(Long idProducto) {
+        return productoMapper.toDto(obtenerProductoPorId(idProducto));
     }
 
     @Override
-    public ProductoEntity crear(ProductoEntity producto) {
+    public ProductoDto crear(ProductoDto productoDto) {
+        ProductoEntity producto = productoMapper.toEntity(productoDto);
         LocalDateTime ahora = LocalDateTime.now();
         producto.setIdProducto(null);
         producto.setCategoria(obtenerCategoria(producto));
@@ -43,12 +51,13 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setFechaModifica(null);
         producto.setActivo(valorPorDefecto(producto.getActivo(), true));
         producto.setEstado(valorPorDefecto(producto.getEstado(), true));
-        return productoRepository.save(producto);
+        return productoMapper.toDto(productoRepository.save(producto));
     }
 
     @Override
-    public ProductoEntity actualizar(Long idProducto, ProductoEntity producto) {
-        ProductoEntity productoActual = obtenerPorId(idProducto);
+    public ProductoDto actualizar(Long idProducto, ProductoDto productoDto) {
+        ProductoEntity producto = productoMapper.toEntity(productoDto);
+        ProductoEntity productoActual = obtenerProductoPorId(idProducto);
         productoActual.setCategoria(obtenerCategoria(producto));
         productoActual.setNombre(producto.getNombre());
         productoActual.setDescripcion(producto.getDescripcion());
@@ -59,13 +68,18 @@ public class ProductoServiceImpl implements ProductoService {
         productoActual.setActivo(producto.getActivo());
         productoActual.setUsuarioModifica(producto.getUsuarioModifica());
         productoActual.setFechaModifica(LocalDateTime.now());
-        return productoRepository.save(productoActual);
+        return productoMapper.toDto(productoRepository.save(productoActual));
     }
 
     @Override
     public void eliminar(Long idProducto) {
-        ProductoEntity producto = obtenerPorId(idProducto);
+        ProductoEntity producto = obtenerProductoPorId(idProducto);
         productoRepository.delete(producto);
+    }
+
+    private ProductoEntity obtenerProductoPorId(Long idProducto) {
+        return productoRepository.findById(idProducto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
     }
 
     private CategoriaEntity obtenerCategoria(ProductoEntity producto) {

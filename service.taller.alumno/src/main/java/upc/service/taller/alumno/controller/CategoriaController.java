@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import upc.service.taller.alumno.entity.CategoriaEntity;
+import upc.service.taller.alumno.dto.CategoriaDto;
 import upc.service.taller.alumno.service.CategoriaService;
 import upc.service.taller.alumno.utils.RespuestaExcepcion;
 import upc.service.taller.alumno.utils.RespuestaGenerica;
@@ -36,13 +36,13 @@ public class CategoriaController {
             summary = "Lista categorias",
             description = "Permite listar todas las categorias registradas"
     )
-    public ResponseEntity<RespuestaGenerica<CategoriaEntity>> listar() {
+    public ResponseEntity<RespuestaGenerica<CategoriaDto>> listar() {
         try {
-            List<CategoriaEntity> listaCategorias = categoriaService.listar();
-            return ResponseEntity.ok(RespuestaGenerica.<CategoriaEntity>builder()
+            List<CategoriaDto> listaCategoriasDto = categoriaService.listar();
+            return ResponseEntity.ok(RespuestaGenerica.<CategoriaDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .lista(listaCategorias)
-                    .tamanioLista(listaCategorias.size())
+                    .lista(listaCategoriasDto)
+                    .tamanioLista(listaCategoriasDto.size())
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -54,12 +54,12 @@ public class CategoriaController {
             summary = "Obtiene una categoria",
             description = "Permite obtener una categoria por su identificador"
     )
-    public ResponseEntity<RespuestaGenerica<CategoriaEntity>> obtenerPorId(@PathVariable Long idCategoria) {
+    public ResponseEntity<RespuestaGenerica<CategoriaDto>> obtenerPorId(@PathVariable Long idCategoria) {
         try {
-            CategoriaEntity categoria = categoriaService.obtenerPorId(idCategoria);
-            return ResponseEntity.ok(RespuestaGenerica.<CategoriaEntity>builder()
+            CategoriaDto categoriaDto = categoriaService.obtenerPorId(idCategoria);
+            return ResponseEntity.ok(RespuestaGenerica.<CategoriaDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .objeto(categoria)
+                    .objeto(categoriaDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -71,12 +71,12 @@ public class CategoriaController {
             summary = "Crea una categoria",
             description = "Permite registrar una nueva categoria"
     )
-    public ResponseEntity<RespuestaGenerica<CategoriaEntity>> crear(@RequestBody CategoriaEntity categoria) {
+    public ResponseEntity<RespuestaGenerica<CategoriaDto>> crear(@RequestBody CategoriaDto categoriaDto) {
         try {
-            CategoriaEntity categoriaCreada = categoriaService.crear(categoria);
-            return ResponseEntity.status(HttpStatus.CREATED).body(RespuestaGenerica.<CategoriaEntity>builder()
+            CategoriaDto categoriaCreadaDto = categoriaService.crear(categoriaDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(RespuestaGenerica.<CategoriaDto>builder()
                     .estadoCodigo(HttpStatus.CREATED.value())
-                    .objeto(categoriaCreada)
+                    .objeto(categoriaCreadaDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -88,15 +88,15 @@ public class CategoriaController {
             summary = "Actualiza una categoria",
             description = "Permite actualizar los datos de una categoria existente"
     )
-    public ResponseEntity<RespuestaGenerica<CategoriaEntity>> actualizar(
+    public ResponseEntity<RespuestaGenerica<CategoriaDto>> actualizar(
             @PathVariable Long idCategoria,
-            @RequestBody CategoriaEntity categoria
+            @RequestBody CategoriaDto categoriaDto
     ) {
         try {
-            CategoriaEntity categoriaActualizada = categoriaService.actualizar(idCategoria, categoria);
-            return ResponseEntity.ok(RespuestaGenerica.<CategoriaEntity>builder()
+            CategoriaDto categoriaActualizadaDto = categoriaService.actualizar(idCategoria, categoriaDto);
+            return ResponseEntity.ok(RespuestaGenerica.<CategoriaDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .objeto(categoriaActualizada)
+                    .objeto(categoriaActualizadaDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -108,10 +108,10 @@ public class CategoriaController {
             summary = "Elimina una categoria",
             description = "Permite eliminar una categoria por su identificador"
     )
-    public ResponseEntity<RespuestaGenerica<CategoriaEntity>> eliminar(@PathVariable Long idCategoria) {
+    public ResponseEntity<RespuestaGenerica<CategoriaDto>> eliminar(@PathVariable Long idCategoria) {
         try {
             categoriaService.eliminar(idCategoria);
-            return ResponseEntity.ok(RespuestaGenerica.<CategoriaEntity>builder()
+            return ResponseEntity.ok(RespuestaGenerica.<CategoriaDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
                     .mensaje("Categoria eliminada correctamente")
                     .build());

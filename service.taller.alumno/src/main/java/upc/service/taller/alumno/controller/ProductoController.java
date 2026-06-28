@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import upc.service.taller.alumno.entity.ProductoEntity;
+import upc.service.taller.alumno.dto.ProductoDto;
 import upc.service.taller.alumno.service.ProductoService;
 import upc.service.taller.alumno.utils.RespuestaExcepcion;
 import upc.service.taller.alumno.utils.RespuestaGenerica;
@@ -36,13 +36,13 @@ public class ProductoController {
             summary = "Lista productos",
             description = "Permite listar todos los productos registrados"
     )
-    public ResponseEntity<RespuestaGenerica<ProductoEntity>> listar() {
+    public ResponseEntity<RespuestaGenerica<ProductoDto>> listar() {
         try {
-            List<ProductoEntity> listaProductos = productoService.listar();
-            return ResponseEntity.ok(RespuestaGenerica.<ProductoEntity>builder()
+            List<ProductoDto> listaProductosDto = productoService.listar();
+            return ResponseEntity.ok(RespuestaGenerica.<ProductoDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .lista(listaProductos)
-                    .tamanioLista(listaProductos.size())
+                    .lista(listaProductosDto)
+                    .tamanioLista(listaProductosDto.size())
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -54,12 +54,12 @@ public class ProductoController {
             summary = "Obtiene un producto",
             description = "Permite obtener un producto por su identificador"
     )
-    public ResponseEntity<RespuestaGenerica<ProductoEntity>> obtenerPorId(@PathVariable Long idProducto) {
+    public ResponseEntity<RespuestaGenerica<ProductoDto>> obtenerPorId(@PathVariable Long idProducto) {
         try {
-            ProductoEntity producto = productoService.obtenerPorId(idProducto);
-            return ResponseEntity.ok(RespuestaGenerica.<ProductoEntity>builder()
+            ProductoDto productoDto = productoService.obtenerPorId(idProducto);
+            return ResponseEntity.ok(RespuestaGenerica.<ProductoDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .objeto(producto)
+                    .objeto(productoDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -71,12 +71,12 @@ public class ProductoController {
             summary = "Crea un producto",
             description = "Permite registrar un nuevo producto"
     )
-    public ResponseEntity<RespuestaGenerica<ProductoEntity>> crear(@RequestBody ProductoEntity producto) {
+    public ResponseEntity<RespuestaGenerica<ProductoDto>> crear(@RequestBody ProductoDto productoDto) {
         try {
-            ProductoEntity productoCreado = productoService.crear(producto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(RespuestaGenerica.<ProductoEntity>builder()
+            ProductoDto productoCreadoDto = productoService.crear(productoDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(RespuestaGenerica.<ProductoDto>builder()
                     .estadoCodigo(HttpStatus.CREATED.value())
-                    .objeto(productoCreado)
+                    .objeto(productoCreadoDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -88,15 +88,15 @@ public class ProductoController {
             summary = "Actualiza un producto",
             description = "Permite actualizar los datos de un producto existente"
     )
-    public ResponseEntity<RespuestaGenerica<ProductoEntity>> actualizar(
+    public ResponseEntity<RespuestaGenerica<ProductoDto>> actualizar(
             @PathVariable Long idProducto,
-            @RequestBody ProductoEntity producto
+            @RequestBody ProductoDto productoDto
     ) {
         try {
-            ProductoEntity productoActualizado = productoService.actualizar(idProducto, producto);
-            return ResponseEntity.ok(RespuestaGenerica.<ProductoEntity>builder()
+            ProductoDto productoActualizadoDto = productoService.actualizar(idProducto, productoDto);
+            return ResponseEntity.ok(RespuestaGenerica.<ProductoDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
-                    .objeto(productoActualizado)
+                    .objeto(productoActualizadoDto)
                     .build());
         } catch (Exception e) {
             return RespuestaExcepcion.handleControllerException(e);
@@ -108,10 +108,10 @@ public class ProductoController {
             summary = "Elimina un producto",
             description = "Permite eliminar un producto por su identificador"
     )
-    public ResponseEntity<RespuestaGenerica<ProductoEntity>> eliminar(@PathVariable Long idProducto) {
+    public ResponseEntity<RespuestaGenerica<ProductoDto>> eliminar(@PathVariable Long idProducto) {
         try {
             productoService.eliminar(idProducto);
-            return ResponseEntity.ok(RespuestaGenerica.<ProductoEntity>builder()
+            return ResponseEntity.ok(RespuestaGenerica.<ProductoDto>builder()
                     .estadoCodigo(HttpStatus.OK.value())
                     .mensaje("Producto eliminado correctamente")
                     .build());

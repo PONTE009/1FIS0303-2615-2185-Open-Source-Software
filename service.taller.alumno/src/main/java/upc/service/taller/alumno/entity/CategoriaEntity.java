@@ -1,11 +1,7 @@
 package upc.service.taller.alumno.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +9,15 @@ import lombok.Setter;
 import upc.service.taller.alumno.utils.Auditoria;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tbl_categorias", schema = "upc")
+@Table(name = "tbl_categorias")
 public class CategoriaEntity extends Auditoria {
 
     @Id
@@ -35,5 +33,9 @@ public class CategoriaEntity extends Auditoria {
 
     @Column(name = "estado")
     private Boolean estado;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    private List<ProductoEntity> productos = new ArrayList<>();
 
 }

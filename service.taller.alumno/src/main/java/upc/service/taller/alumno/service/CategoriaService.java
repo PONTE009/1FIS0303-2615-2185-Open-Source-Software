@@ -1,18 +1,18 @@
 package upc.service.taller.alumno.service;
 
-import upc.service.taller.alumno.entity.CategoriaEntity;
+import upc.service.taller.alumno.dto.CategoriaDto;
 
 import java.util.List;
 
 public interface CategoriaService {
 
-    List<CategoriaEntity> listar();
+    List<CategoriaDto> listar();
 
-    CategoriaEntity obtenerPorId(Long idCategoria);
+    CategoriaDto obtenerPorId(Long idCategoria);
 
-    CategoriaEntity crear(CategoriaEntity categoria);
+    CategoriaDto crear(CategoriaDto categoria);
 
-    CategoriaEntity actualizar(Long idCategoria, CategoriaEntity categoria);
+    CategoriaDto actualizar(Long idCategoria, CategoriaDto categoria);
 
     void eliminar(Long idCategoria);
 }

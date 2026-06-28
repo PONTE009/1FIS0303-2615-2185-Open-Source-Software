@@ -1,18 +1,18 @@
 package upc.service.taller.alumno.service;
 
-import upc.service.taller.alumno.entity.ProductoEntity;
+import upc.service.taller.alumno.dto.ProductoDto;
 
 import java.util.List;
 
 public interface ProductoService {
 
-    List<ProductoEntity> listar();
+    List<ProductoDto> listar();
 
-    ProductoEntity obtenerPorId(Long idProducto);
+    ProductoDto obtenerPorId(Long idProducto);
 
-    ProductoEntity crear(ProductoEntity producto);
+    ProductoDto crear(ProductoDto producto);
 
-    ProductoEntity actualizar(Long idProducto, ProductoEntity producto);
+    ProductoDto actualizar(Long idProducto, ProductoDto producto);
 
     void eliminar(Long idProducto);
 }
