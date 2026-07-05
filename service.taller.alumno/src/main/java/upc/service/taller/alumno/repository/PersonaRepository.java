@@ -6,4 +6,7 @@ import upc.service.taller.alumno.entity.PersonaEntity;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<PersonaEntity, Long> {
+    boolean existsByCorreo(String correo);
+
+    boolean existsByDocumento(String documento);
 }

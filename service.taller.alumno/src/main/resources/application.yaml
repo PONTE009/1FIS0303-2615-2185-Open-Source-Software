@@ -11,14 +11,25 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
+  sql:
+      init:
+        mode: always
+
   data:
     mongodb:
       uri: ${MONGO_URI:mongodb://admin:Sistemas123@localhost:27017/db_mongo?authSource=admin}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:secret-key-jwt-para-service-taller-alumno-minimo-32-caracteres}
+    access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:900000}
+    refresh-token-expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRATION_MS:604800000}
