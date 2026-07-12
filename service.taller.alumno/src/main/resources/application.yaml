@@ -1,11 +1,11 @@
 server:
-  port: 8081
+  port: 8090
 spring:
   application:
     name: service.taller.alumno
 
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5437/db_upc}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5437}/${POSTGRES_DB:db_upc}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:123456}
     driver-class-name: org.postgresql.Driver
@@ -26,7 +26,7 @@ spring:
 
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://admin:Sistemas123@localhost:27017/db_mongo?authSource=admin}
+      uri: mongodb://${MONGO_USER:admin}:${MONGO_PASSWORD:Sistemas123}@${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DB:db_mongo}?authSource=admin
 
 security:
   jwt:
